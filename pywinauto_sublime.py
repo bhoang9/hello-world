@@ -1,17 +1,48 @@
 from pywinauto.application import Application
+from pywinauto import mouse as py_mouse
+from pywinauto import keyboard as py_keyboard
 
-app = Application(backend="uia").start('C:\\Program Files\\Sublime Text 3\\sublime_text.exe')
+from pywinauto.application import Application
+
+#app = Application(backend="uia").start('C:\\Program Files\\Sublime Text 3\\sublime_text.exe')
+
+app = Application(backend="uia").connect(path='C:\\Program Files\\Sublime Text 3\\sublime_text.exe')
 
 sublime_window = app.window(class_name="PX_WINDOW_CLASS")
-
 sublime_window.wait('visible')
 
-#print("great success")
+#returns an array of objects w/ control_type "MenuBar"
+app_menu = sublime_window.descendants(control_type="MenuBar")[1]
 
-#sublime_window.print_control_identifiers()
+print(app_menu.items()[8])
 
-print(sublime_window.descendants(control_type="MenuBar"))
+#focus on the 9th item in the list of MenuItems
+app_menu.items()[8].set_focus()
 
-#sublime_window.menu_select("Preferences->Font").menu_select("Larger")
+#select that item
+app_menu.items()[8].select()
 
-#https://github.com/pywinauto/pywinauto/issues/385
+#When selecting a menu item, that item becomes the top window; look for descendents of the window w/ control type "MenuItem"
+#Even if this "menuitem" technically contains an array of more menu items, it is still treated as a menuitem rather than a menubar
+preferences_menu = app.top_window().descendants(control_type="MenuItem")[7]
+
+preferences_menu.select()
+print(app.top_window().descendants())
+
+app.top_window.descendants().
+#print(app.top_window().desecendants(control_types="MenuItem"))
+
+'''for mi in app_menu.items():
+    mi.set_focus()
+    mi.select()
+    print(app.top_window().descendants(control_type="MenuItem"))
+    print("=============================================")'''
+
+#adobe_window.menu_select("View->Show/Hide->Tools Pane")
+#adobe_window.menu_select("")
+
+#adobe_window.menu_select("View->Display Theme->Dark Gray")
+
+#adobe_window.menu_select("Open")
+
+print("\n EOF ====================")
